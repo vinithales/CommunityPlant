@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CommunityPlant.Domain.Interfaces
 {
-    public class ITaskRepository
+    public interface ITaskRepository
     {
         Task<Task> CreateAsync (Task task);
 

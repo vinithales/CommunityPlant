@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using CommunityPlant.Application.DTOs;
 using CommunityPlant.Application.Services.Interface;
+using CommunityPlant.Domain.Interfaces;
 
 namespace CommunityPlant.Application.Services
 {
@@ -28,22 +31,19 @@ namespace CommunityPlant.Application.Services
     
 
 
-
-        
-
-        Task<TaskResponseDTO> ITaskService.CreateTaskAsync(CreateTaskDTO taskData)
+        async Task<TaskResponseDTO> ITaskService.CreateTaskAsync(CreateTaskDTO taskData, GardenDTO gardenDto)
         {
-            if(string.IsNullOrEmpty(taskData.Name)){
-                throw new ArgumentException("O nome da Tareda é obrigatório.");
+            if(string.IsNullOrEmpty(taskData.Name) && string.IsNullOrEmpty(taskData.Description) && string.IsNullOrEmpty()){
+                throw new ArgumentException("O nome da Tarefa é obrigatório.");
             }
 
-            var garden = await _gardenRepository.GetTaskByIdAsync(TaskData);
+        
+            var garden = await _gardenRepository.GetGardenByIdAsync(gardenDto.Id);
             if(garden == null){
                 throw new KeyNotFoundException("Jardim não encontrado.");
             }
 
             var task = _mapper.Map<Task>(taskData);
-            task.Status = "Pending";
 
             var createdTask = await _taskRepository.CreateAsync(task);
             
@@ -53,18 +53,18 @@ namespace CommunityPlant.Application.Services
 
         }
 
-        Task<bool> ITaskService.CompleteTaskAsync(int taskId)
+        async Task<bool> ITaskService.CompleteTaskAsync(int taskId)
         {
             
             throw new NotImplementedException();
         }
 
-        Task<TaskResponseDTO> ITaskService.GetTaskByIdAsync(int taskId)
+        async Task<TaskResponseDTO> ITaskService.GetTaskByIdAsync(int taskId)
         {
             throw new NotImplementedException();
         }
 
-        Task<IEnumerable<TaskResponseDTO>> ITaskService.GetTasksByGardenIdAsync(int gardenId)
+        async Task<IEnumerable<TaskResponseDTO>> ITaskService.GetTasksByGardenIdAsync(int gardenId)
         {
             throw new NotImplementedException();
         }

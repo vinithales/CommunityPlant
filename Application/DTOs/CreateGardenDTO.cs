@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CommunityPlant.Domain.Entities
+namespace CommunityPlant.Application.DTOs
 {
-    public class Garden
+    public class CreateGardenDTO
     {
-        public int Id {get; set;}
         public string Name {get; set;}
         public string Location {get; set;}
         public DateTime CreatedAt {get; set;}
-        public List<Task> Tasks {get; set;}
 
     }
 }

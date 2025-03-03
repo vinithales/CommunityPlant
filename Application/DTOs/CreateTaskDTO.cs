@@ -12,5 +12,7 @@ namespace CommunityPlant.Application.DTOs
         public string Description {get; set;}
         public int GardenId {get; set;}
         public DateTime DueDate{get; set;}
+         public string Status { get; } = "Pending";
+        
     }
 }

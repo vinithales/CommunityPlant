@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "S6G+u9u7/CU=",
+  "dgSpecHash": "63rYL0HBmiw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\vinic\\OneDrive\\Documentos\\communityPlant\\CommunityPlant\\CommunityPlant.csproj",
+  "projectFilePath": "C:\\Users\\vinic\\OneDrive\\Documentos\\CommunityPlant\\CommunityPlant\\CommunityPlant.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vinic\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\vinic\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

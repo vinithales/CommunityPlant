@@ -12,6 +12,6 @@ namespace CommunityPlant.Application.DTOs
         public string Description {get; set;}
         public DateTime DueDate { get; set; }
         public string Status { get; set; }
-        public string GardenName { get; set; }
+        public GardenDTO gardenDTO { get; set; }
     }
 }

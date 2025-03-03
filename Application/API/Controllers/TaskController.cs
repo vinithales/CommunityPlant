@@ -22,9 +22,9 @@ namespace CommunityPlant.Application.API.Controllers
         }
 
          [HttpPost]
-        public async Task<IActionResult> CreateTask([FromBody] CreateTaskDTO taskDto)
+        public async Task<IActionResult> CreateTask([FromBody] CreateTaskDTO taskDto, GardenDTO gardenDto)
         {
-            var result = await _taskService.CreateTaskAsync(taskDto);
+            var result = await _taskService.CreateTaskAsync(taskDto, gardenDto);
             return CreatedAtAction(nameof(GetTaskById), new { taskId = result.Id }, result);
         }
 
