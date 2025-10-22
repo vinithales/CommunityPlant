@@ -8,11 +8,13 @@ namespace CommunityPlant.Application.DTOs
 {
     public class CreateTaskDTO
     {
-        public string Name {get; set;}
-        public string Description {get; set;}
-        public int GardenId {get; set;}
-        public DateTime DueDate{get; set;}
-         public string Status { get; } = "Pending";
-        
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public int GardenId { get; set; }
+        public DateTime DueDate { get; set; }
+        public int? AssignedToUserId { get; set; }
+        public int? CreatedByUserId { get; set; }
+        public string Priority { get; set; } = "Medium";
+        public string Status { get; } = "Pending";
     }
 }
