@@ -2,18 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TaskEntity = CommunityPlant.Domain.Entities.Task;
 
 namespace CommunityPlant.Domain.Interfaces
 {
     public interface ITaskRepository
     {
-        Task<Task> CreateAsync (Task task);
+        Task<TaskEntity> CreateAsync(TaskEntity task);
 
-        Task<Task> GetByIdAsync(int taskId);
+        Task<TaskEntity?> GetByIdAsync(int taskId);
 
-        Task<IEnumerable<Task>> GetByGardenIdAsync(int gardenId);
-        Task<bool> UpdateAsync(Task task);
-        
-
+        Task<IEnumerable<TaskEntity>> GetByGardenIdAsync(int gardenId);
+        Task<bool> UpdateAsync(TaskEntity task);
     }
 }
