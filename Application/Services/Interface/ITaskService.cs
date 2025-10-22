@@ -8,10 +8,9 @@ namespace CommunityPlant.Application.Services.Interface
 {
     public interface ITaskService
     {
-        async Task<TaskResponseDTO> CreateTaskAsync(CreateTaskDTO taskData, GardenDTO gardenDto);
-        async Task<TaskResponseDTO> GetTaskByIdAsync(int taskId);
-        async Task<IEnumerable<TaskResponseDTO>> GetTasksByGardenIdAsync(int gardenId);
-        async Task<bool> CompleteTaskAsync(int taskId);
-    
+        Task<TaskResponseDTO> CreateTaskAsync(CreateTaskDTO taskData);
+        Task<TaskResponseDTO> GetTaskByIdAsync(int taskId);
+        Task<IEnumerable<TaskResponseDTO>> GetTasksByGardenIdAsync(int gardenId);
+        Task<bool> CompleteTaskAsync(int taskId);
     }
 }

@@ -6,6 +6,7 @@ using AutoMapper;
 using CommunityPlant.Application.DTOs;
 using CommunityPlant.Application.Services.Interface;
 using CommunityPlant.Domain.Interfaces;
+using TaskEntity = CommunityPlant.Domain.Entities.Task;
 
 namespace CommunityPlant.Application.Services
 {
@@ -31,42 +32,52 @@ namespace CommunityPlant.Application.Services
     
 
 
-        async Task<TaskResponseDTO> ITaskService.CreateTaskAsync(CreateTaskDTO taskData, GardenDTO gardenDto)
+        public async Task<TaskResponseDTO> CreateTaskAsync(CreateTaskDTO taskData)
         {
-            if(string.IsNullOrEmpty(taskData.Name) && string.IsNullOrEmpty(taskData.Description) && string.IsNullOrEmpty()){
+            if (string.IsNullOrWhiteSpace(taskData.Name))
+            {
                 throw new ArgumentException("O nome da Tarefa é obrigatório.");
             }
 
-        
-            var garden = await _gardenRepository.GetGardenByIdAsync(gardenDto.Id);
-            if(garden == null){
+            var garden = await _gardenRepository.GetGardenByIdAsync(taskData.GardenId);
+            if (garden == null)
+            {
                 throw new KeyNotFoundException("Jardim não encontrado.");
             }
 
-            var task = _mapper.Map<Task>(taskData);
+            var task = _mapper.Map<TaskEntity>(taskData);
+            task.CreatedAt = DateTime.UtcNow;
 
             var createdTask = await _taskRepository.CreateAsync(task);
-            
             return _mapper.Map<TaskResponseDTO>(createdTask);
-
-
-
         }
 
-        async Task<bool> ITaskService.CompleteTaskAsync(int taskId)
+        public async Task<bool> CompleteTaskAsync(int taskId)
         {
-            
-            throw new NotImplementedException();
+            var taskEntity = await _taskRepository.GetByIdAsync(taskId);
+            if (taskEntity == null)
+                return false;
+
+            taskEntity.Status = "Completed";
+            taskEntity.CompletedAt = DateTime.UtcNow;
+
+            await _taskRepository.UpdateAsync(taskEntity);
+            return true;
         }
 
-        async Task<TaskResponseDTO> ITaskService.GetTaskByIdAsync(int taskId)
+        public async Task<TaskResponseDTO> GetTaskByIdAsync(int taskId)
         {
-            throw new NotImplementedException();
+            var task = await _taskRepository.GetByIdAsync(taskId);
+            if (task == null)
+                throw new KeyNotFoundException("Tarefa não encontrada.");
+
+            return _mapper.Map<TaskResponseDTO>(task);
         }
 
-        async Task<IEnumerable<TaskResponseDTO>> ITaskService.GetTasksByGardenIdAsync(int gardenId)
+        public async Task<IEnumerable<TaskResponseDTO>> GetTasksByGardenIdAsync(int gardenId)
         {
-            throw new NotImplementedException();
+            var tasks = await _taskRepository.GetByGardenIdAsync(gardenId);
+            return _mapper.Map<IEnumerable<TaskResponseDTO>>(tasks);
         }
     }
 }
