@@ -44,6 +44,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<PlantedCrop>> GetPlantedCropsByGardenAsync(int gardenId)
         {
             return await _context.PlantedCrops
+                .AsNoTracking()
                 .Include(pc => pc.Plant)
                 .Include(pc => pc.PlantedByUser)
                 .Where(pc => pc.GardenId == gardenId && pc.IsActive)
@@ -54,6 +55,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<PlantedCrop>> GetPlantedCropsByUserAsync(int userId)
         {
             return await _context.PlantedCrops
+                .AsNoTracking()
                 .Include(pc => pc.Garden)
                 .Include(pc => pc.Plant)
                 .Where(pc => pc.PlantedByUserId == userId && pc.IsActive)
@@ -64,6 +66,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<PlantedCrop>> GetPlantedCropsByStatusAsync(string status)
         {
             return await _context.PlantedCrops
+                .AsNoTracking()
                 .Include(pc => pc.Garden)
                 .Include(pc => pc.Plant)
                 .Include(pc => pc.PlantedByUser)
@@ -76,6 +79,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         {
             var today = DateTime.UtcNow.Date;
             return await _context.PlantedCrops
+                .AsNoTracking()
                 .Include(pc => pc.Garden)
                 .Include(pc => pc.Plant)
                 .Include(pc => pc.PlantedByUser)

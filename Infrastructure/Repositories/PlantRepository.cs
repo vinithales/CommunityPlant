@@ -35,6 +35,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<Plant>> GetAllPlantsAsync()
         {
             return await _context.Plants
+                .AsNoTracking()
                 .Where(p => p.IsActive)
                 .OrderBy(p => p.Name)
                 .ToListAsync();
@@ -43,6 +44,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<Plant>> GetPlantsByTypeAsync(string type)
         {
             return await _context.Plants
+                .AsNoTracking()
                 .Where(p => p.IsActive && p.Type == type)
                 .OrderBy(p => p.Name)
                 .ToListAsync();
@@ -51,6 +53,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<Plant>> SearchPlantsAsync(string searchTerm)
         {
             return await _context.Plants
+                .AsNoTracking()
                 .Where(p => p.IsActive && 
                            (p.Name.Contains(searchTerm) || 
                             p.ScientificName.Contains(searchTerm) ||

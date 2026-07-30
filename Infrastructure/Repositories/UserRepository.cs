@@ -28,6 +28,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<User?> GetUserByIdAsync(int id)
         {
             return await _context.Users
+                .AsSplitQuery()
                 .Include(u => u.Participations)
                 .ThenInclude(p => p.Garden)
                 .Include(u => u.AssignedTasks)
@@ -37,12 +38,14 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<User?> GetUserByEmailAsync(string email)
         {
             return await _context.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<List<User>> GetAllUsersAsync()
         {
             return await _context.Users
+                .AsNoTracking()
                 .Where(u => u.IsActive)
                 .OrderBy(u => u.Name)
                 .ToListAsync();

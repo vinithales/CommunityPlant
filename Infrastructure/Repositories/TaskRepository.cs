@@ -30,15 +30,19 @@ namespace CommunityPlant.Infrastructure.Repositories
 
         public async Task<TaskEntity?> GetByIdAsync(int taskId)
         {
-            var task = await _context.Tasks.Include(t => t.Garden)
-                                    .FirstOrDefaultAsync(t => t.Id == taskId);
-            return task;
+            return await _context.Tasks
+                .AsNoTracking()
+                .Include(t => t.Garden)
+                .FirstOrDefaultAsync(t => t.Id == taskId);
         }
 
         public async Task<IEnumerable<TaskEntity>> GetByGardenIdAsync(int gardenId)
         {
-            var tasks = await _context.Tasks.Where(t => t.GardenId == gardenId).ToListAsync();
-            return tasks;
+            return await _context.Tasks
+                .AsNoTracking()
+                .Where(t => t.GardenId == gardenId)
+                .ToListAsync();
+
         }
         
         public async Task<bool> UpdateAsync(TaskEntity task)

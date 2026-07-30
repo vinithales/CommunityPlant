@@ -35,6 +35,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<WeatherData>> GetWeatherDataByGardenAsync(int gardenId)
         {
             return await _context.WeatherData
+                .AsNoTracking()
                 .Where(wd => wd.GardenId == gardenId)
                 .OrderByDescending(wd => wd.Date)
                 .ToListAsync();
@@ -43,6 +44,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<WeatherData>> GetWeatherDataByDateRangeAsync(int gardenId, DateTime startDate, DateTime endDate)
         {
             return await _context.WeatherData
+                .AsNoTracking()
                 .Where(wd => wd.GardenId == gardenId && 
                            wd.Date >= startDate && 
                            wd.Date <= endDate)
@@ -53,6 +55,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<WeatherData?> GetLatestWeatherDataAsync(int gardenId)
         {
             return await _context.WeatherData
+                .AsNoTracking()
                 .Where(wd => wd.GardenId == gardenId)
                 .OrderByDescending(wd => wd.Date)
                 .FirstOrDefaultAsync();

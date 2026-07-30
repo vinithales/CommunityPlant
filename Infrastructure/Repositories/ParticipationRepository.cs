@@ -36,6 +36,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<Participation>> GetParticipationsByGardenAsync(int gardenId)
         {
             return await _context.Participations
+                .AsNoTracking()
                 .Include(p => p.User)
                 .Where(p => p.GardenId == gardenId && p.IsActive)
                 .OrderBy(p => p.JoinedDate)
@@ -45,6 +46,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<Participation>> GetParticipationsByUserAsync(int userId)
         {
             return await _context.Participations
+                .AsNoTracking()
                 .Include(p => p.Garden)
                 .Where(p => p.UserId == userId && p.IsActive)
                 .OrderBy(p => p.JoinedDate)
@@ -54,10 +56,11 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<Participation?> GetActiveParticipationAsync(int userId, int gardenId)
         {
             return await _context.Participations
+                .AsNoTracking()
                 .Include(p => p.User)
                 .Include(p => p.Garden)
-                .FirstOrDefaultAsync(p => p.UserId == userId && 
-                                        p.GardenId == gardenId && 
+                .FirstOrDefaultAsync(p => p.UserId == userId &&
+                                        p.GardenId == gardenId &&
                                         p.IsActive);
         }
 
@@ -82,8 +85,8 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<bool> UserParticipatesInGardenAsync(int userId, int gardenId)
         {
             return await _context.Participations
-                .AnyAsync(p => p.UserId == userId && 
-                             p.GardenId == gardenId && 
+                .AnyAsync(p => p.UserId == userId &&
+                             p.GardenId == gardenId &&
                              p.IsActive);
         }
     }

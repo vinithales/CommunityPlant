@@ -28,6 +28,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<Garden?> GetGardenByIdAsync(int id)
         {
             return await _context.Gardens
+                .AsSplitQuery()
                 .Include(g => g.CreatedByUser)
                 .Include(g => g.Tasks)
                 .Include(g => g.Participations)
@@ -40,6 +41,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<Garden>> GetAllGardensAsync()
         {
             return await _context.Gardens
+                .AsNoTracking()
                 .Include(g => g.CreatedByUser)
                 .Include(g => g.Participations)
                 .Where(g => g.IsActive)
@@ -50,6 +52,7 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<Garden>> GetPublicGardensAsync()
         {
             return await _context.Gardens
+                .AsNoTracking()
                 .Include(g => g.CreatedByUser)
                 .Include(g => g.Participations)
                 .Where(g => g.IsActive && g.IsPublic)
@@ -60,10 +63,11 @@ namespace CommunityPlant.Infrastructure.Repositories
         public async Task<List<Garden>> GetGardensByUserAsync(int userId)
         {
             return await _context.Gardens
+                .AsNoTracking()
                 .Include(g => g.CreatedByUser)
                 .Include(g => g.Participations)
-                .Where(g => g.IsActive && 
-                           (g.CreatedByUserId == userId || 
+                .Where(g => g.IsActive &&
+                           (g.CreatedByUserId == userId ||
                             g.Participations.Any(p => p.UserId == userId && p.IsActive)))
                 .OrderBy(g => g.Name)
                 .ToListAsync();
