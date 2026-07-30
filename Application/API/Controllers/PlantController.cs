@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommunityPlant.Application.DTOs;
 using CommunityPlant.Application.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommunityPlant.Application.API.Controllers
 {
@@ -18,6 +19,7 @@ namespace CommunityPlant.Application.API.Controllers
             _plantService = plantService;
         }
 
+        [Authorize(Roles = "Administrator,Manager")]
         [HttpPost]
         public async Task<IActionResult> CreatePlant([FromBody] CreatePlantDTO plantDto)
         {
@@ -77,6 +79,7 @@ namespace CommunityPlant.Application.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrator,Manager")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePlant(int id, [FromBody] PlantDTO plantDto)
         {
@@ -91,6 +94,7 @@ namespace CommunityPlant.Application.API.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrator,Manager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlant(int id)
         {

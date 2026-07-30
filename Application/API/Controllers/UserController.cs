@@ -4,20 +4,26 @@ using System.Threading.Tasks;
 using CommunityPlant.Application.DTOs;
 using CommunityPlant.Application.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using CommunityPlant.Application.Services;
 
 namespace CommunityPlant.Application.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ITokenService tokenService)
         {
             _userService = userService;
+            _tokenService = tokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDTO userDto)
         {
@@ -83,6 +89,23 @@ namespace CommunityPlant.Application.API.Controllers
             return NoContent();
         }
 
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
+        {
+            var user = await _userService.AuthenticateAsync(loginDto.Email, loginDto.Password);
+            if (user == null)
+                return Unauthorized("Credenciais inválidas.");
+
+            return Ok(new
+            {
+                AccessToken = _tokenService.CreateToken(user),
+                ExpiresIn = 3600,
+                User = new { user.Id, user.Name, user.Email, user.TypeUser }
+            });
+        }
+
+        [AllowAnonymous]
         [HttpPost("validate-credentials")]
         public async Task<IActionResult> ValidateCredentials([FromBody] LoginDTO loginDto)
         {

@@ -6,6 +6,9 @@ using CommunityPlant.Application.DTOs;
 using CommunityPlant.Application.Services.Interface;
 using CommunityPlant.Domain.Entities;
 using CommunityPlant.Domain.Interfaces;
+using CommunityPlant.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace CommunityPlant.Application.Services
 {
@@ -13,11 +16,13 @@ namespace CommunityPlant.Application.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<UserResponseDTO> CreateUserAsync(CreateUserDTO userDto)
@@ -32,10 +37,16 @@ namespace CommunityPlant.Application.Services
                 throw new ArgumentException("Já existe um usuário com este email.");
 
             var user = _mapper.Map<User>(userDto);
-            user.SetPassword(userDto.Password);
+            user.UserName = userDto.Email.Trim();
+            user.Email = userDto.Email.Trim();
+            user.TypeUser = EnumTypeUser.Voluntary;
+            user.IsActive = true;
 
-            var createdUser = await _userRepository.CreateUserAsync(user);
-            return _mapper.Map<UserResponseDTO>(createdUser);
+            var result = await _userManager.CreateAsync(user, userDto.Password);
+            if (!result.Succeeded)
+                throw new ArgumentException(string.Join(" ", result.Errors.Select(e => e.Description)));
+
+            return _mapper.Map<UserResponseDTO>(user);
         }
 
         public async Task<UserResponseDTO?> GetUserByIdAsync(int id)
@@ -82,7 +93,15 @@ namespace CommunityPlant.Application.Services
             if (user == null || !user.IsActive)
                 return false;
 
-            return user.VerifyPassword(password);
+            return await _userManager.CheckPasswordAsync(user, password);
+        }
+
+        public async Task<User?> AuthenticateAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email.Trim());
+            if (user == null || !user.IsActive || !await _userManager.CheckPasswordAsync(user, password))
+                return null;
+            return user;
         }
     }
 }

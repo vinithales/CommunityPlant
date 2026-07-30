@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CommunityPlant.Application.DTOs;
 using CommunityPlant.Application.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommunityPlant.Application.API.Controllers
 {
@@ -21,6 +22,7 @@ namespace CommunityPlant.Application.API.Controllers
             _taskService = taskService;
         }
 
+         [Authorize(Roles = "Administrator,Manager")]
          [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDTO taskDto)
         {
@@ -42,6 +44,7 @@ namespace CommunityPlant.Application.API.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPut("{taskId}/complete")]
         public async Task<IActionResult> CompleteTask(int taskId)
         {

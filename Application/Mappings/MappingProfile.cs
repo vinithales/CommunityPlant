@@ -31,10 +31,15 @@ namespace CommunityPlant.Application.Mappings
             // User mappings
             CreateMap<CreateUserDTO, User>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
-                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true));
+                .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Phone));
             
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<User, UserResponseDTO>();
+            CreateMap<User, UserDTO>()
+                .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PhoneNumber ?? string.Empty))
+                .ReverseMap()
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Phone));
+            CreateMap<User, UserResponseDTO>()
+                .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PhoneNumber ?? string.Empty));
 
             // Plant mappings
             CreateMap<CreatePlantDTO, Plant>()

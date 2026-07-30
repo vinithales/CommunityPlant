@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityPlant.Application.DTOs;
+using CommunityPlant.Domain.Entities;
 
 namespace CommunityPlant.Application.Services.Interface
 {
@@ -14,5 +15,6 @@ namespace CommunityPlant.Application.Services.Interface
         Task<UserResponseDTO> UpdateUserAsync(int id, UserDTO userDto);
         Task<bool> DeleteUserAsync(int id);
         Task<bool> ValidateUserCredentialsAsync(string email, string password);
+        Task<User?> AuthenticateAsync(string email, string password);
     }
 }
